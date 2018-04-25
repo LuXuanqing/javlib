@@ -4,7 +4,7 @@ div_mypreview.setAttribute('id', 'myapp')
 var div_videoimages = document.querySelector('#videoimages')
 div_videoimages.parentElement.insertBefore(div_mypreview, div_videoimages)
 // 预览图
-div_mypreview.innerHTML = '<a target="view_window" v-for="pic in pics" v-bind:href="pic.full"><img v-bind:src="pic.thumb"></a>'
+div_mypreview.innerHTML = '<a target="view_window" v-for="pic in pics" :href="pic.full"><img :src="pic.thumb" :title="pic.title"></a>'
 
 
 var app = new Vue({
