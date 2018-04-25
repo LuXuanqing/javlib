@@ -1,6 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
-import json
+
+HEADERS = {
+    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'accept-encoding': 'gzip, deflate, br',
+    'accept-language': 'zh-CN,zh;q=0.9,ja;q=0.8,en;q=0.7',
+    'referer': 'https://www.javbus6.pw/',
+    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36'
+}
 
 
 def get_html(url):

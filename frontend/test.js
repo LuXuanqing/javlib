@@ -16,4 +16,3 @@ function getp() {
             console.log(error);
         });
 }
-

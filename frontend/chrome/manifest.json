@@ -1,0 +1,12 @@
+{
+    "manifest_version": 2,
+    "name": "less tumblr",
+    "version": "0.1.0",
+    "description": "过滤已点赞post和过长文字内容",
+    "content_scripts": [
+        {
+            "matches": ["https://www.tumblr.com/dashboard"],
+            "js": ["main.js"]
+        }
+    ]
+}
