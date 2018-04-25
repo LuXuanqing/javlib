@@ -3,9 +3,9 @@ from javbus import get_pics
 
 app = Flask(__name__)
 
-@app.route('/info/<bango>')
-def info(bango):
-    pics = get_pics(bango)
+@app.route('/info/<bangou>')
+def info(bangou):
+    pics = get_pics(bangou)
     res = jsonify(pics)
     # 允许跨域
     res.headers['Access-Control-Allow-Origin'] = '*'
