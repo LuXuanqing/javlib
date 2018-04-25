@@ -33,7 +33,7 @@ def get_pics(bango):
         pic['thumb'] = sample.find('img')['src']
         pic['title'] = sample.find('img')['title']
         pics.append(pic)
-    return json.dumps(pics)
+    return pics
 
 
 if __name__ == '__main__':
