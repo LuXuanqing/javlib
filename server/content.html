@@ -1,0 +1,37 @@
+<div id="app">
+    <hr class="grey">
+    <div class="header">{{ bangou }}的信息</div>
+    <hr class="grey">
+
+    <div id="links">
+        <table>
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>大小</th>
+                    <th>日期</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="link in info.links">
+                    <td>
+                        <a target=_blank v-bind:href="link.link">{{ link.title }}</a>
+                    </td>
+                    <td>{{ link.size }}</td>
+                    <td>{{ link.date }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr class="grey">
+
+    <div id="pics">
+        <a target=_blank v-for="pic in info.pics" :href="pic.full" v-on:click.prevent="showThisPic(pic)">
+            <img :src="pic.thumb" v-bind:title="pic.title">
+        </a>
+    </div>
+    <div v-if="showPreview" v-on:click="closePreview">
+        <img :src="currentPic.full">
+    </div>
+    <hr class="grey">
+</div>

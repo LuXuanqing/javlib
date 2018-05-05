@@ -6,21 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="test.css">
     <script src="/bower_components/axios/dist/axios.js"></script>
     <script src="/bower_components/vue/dist/vue.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <h1>hello javlibrary</h1>
-        <h2>{{bangou}}</h2>
-        <input type="text" v-model="bangou">
-        <ul>
-            <img v-for="pic in pics" v-bind:src="pic.full" v-bind:title="pic.title">
-        </ul>
-        <button v-on:click="getInfo">get previews</button>
-    </div>
-    <script src="/test.js"></script>
+    <div id="test"></div>
+    <script src="test.js"></script>
 </body>
 
 </html>

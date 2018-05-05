@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_file, make_response
 from javbus import get_pics
 from btsow import get_links
 
@@ -14,5 +14,10 @@ def info(bangou):
     res.headers['Access-Control-Allow-Origin'] = '*'
     return res
 
+@app.route('/content')
+def content():
+    res = make_response(send_file('content.html'))
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    return res
 
 app.run(debug=True)

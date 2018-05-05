@@ -1,33 +1,56 @@
-// 图片显示的容器
-var div_mypreview = document.createElement('div')
-div_mypreview.setAttribute('id', 'myapp')
-var div_videoimages = document.querySelector('#videoimages')
-div_videoimages.parentElement.insertBefore(div_mypreview, div_videoimages)
-// 预览图
-div_mypreview.innerHTML = '<a target="view_window" v-for="pic in pics" :href="pic.full"><img :src="pic.thumb" :title="pic.title"></a>'
+// HTML结构： div#app-container 插入到 div.socialmedia之前
+const appContainer = document.createElement('div')
+appContainer.setAttribute('id', 'app-container')
+target = document.querySelector('div.socialmedia')
+target.parentElement.insertBefore(appContainer, target)
 
 
-var app = new Vue({
-    el: '#myapp',
-    data: {
-        message: 'hello vue',
-        bangou: '',
-        pics: []
-    },
-    created: function() {
-        // get bangou
-        let div_id = document.querySelector('#video_id')
-        let bangou = div_id.querySelector('td.text').innerText
-        this.bangou = bangou
-        //get pics
-        url = 'http://localhost:5000/info/' + this.bangou
-        axios.get(url)
-            .then(response => {
-                this.pics = response.data
-                console.log(this.pics)
-            })
-            .catch(error => {
-                console.log(error);
-            })
+// 把app的html插入到 #app-container
+axios.get('http://localhost:5000/content')
+    .then(res => {
+        // console.log(res)
+        document.querySelector('#app-container').innerHTML = res.data
+        initVue()
+    })
+    .catch(err => console.log(err))
+
+    function initVue() {
+        let app = new Vue({
+            el: '#app',
+            data: {
+                bangou: '',
+                currentPic: {},
+                showPreview: false,
+                info: {}
+            },
+            methods: {
+                getInfo: function () {
+                    url = 'http://localhost:5000/info/' + this.bangou
+                    axios.get(url)
+                        .then(function (response) {
+                            this.info = response.data
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        })
+                },
+                showThisPic: function (pic) {
+                    this.showPreview = true
+                    this.currentPic = pic
+                },
+                closePreview: function () {
+                    this.showPreview = false
+                }
+            },
+            created: function() {
+                let bangou = document.querySelector('#video_id td.text').innerText
+                this.bangou = bangou
+                let url = 'http://localhost:5000/info/' + this.bangou
+                axios.get(url)
+                    .then(res => {
+                        this.info = res.data
+                    })
+                    .catch(err => console.log(err))
+            }
+        })
     }
-})
