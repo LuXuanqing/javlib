@@ -12,7 +12,7 @@ HEADERS = {
 
 def get_html(url):
     try:
-        r = requests.get(url)
+        r = requests.get(url, headers=HEADERS)
         return r.text
     except Exception as err:
         print(err)
@@ -29,20 +29,19 @@ def get_pics(bangou):
     html = get_html(url)
     soup = BeautifulSoup(html, 'html5lib')
 
-    # 预览图的DOM结构：<a href=full><div><img src=thumb></div></a>
-    # 预览图的class='sample-box'
+    # 预览图的DOM结构：<a class="sample-box" href=full><div><img src=thumb></div></a>
     samples = soup.find_all(class_='sample-box')
 
     pics = []
     for sample in samples:
-        pic = {}
-        pic['full'] = sample['href']
-        pic['thumb'] = sample.find('img')['src']
-        pic['title'] = sample.find('img')['title']
+        pic = {
+            'full': sample['href'],
+            'thumb': sample.find('img')['src'],
+            'title': sample.find('img')['title']
+        }
         pics.append(pic)
     return pics
 
 
 if __name__ == '__main__':
     print(get_pics('MIDE-535'))
-    print(get_pics('KDKJ-065'))
