@@ -19,13 +19,13 @@ def get_html(url):
         return ''
 
 
-def get_url(bangou):
+def get_url(id):
     base_url = 'https://www.javbus6.pw/'
-    return base_url + bangou
+    return base_url + id
 
 
-def get_pics(bangou):
-    url = get_url(bangou)
+def get_pics(id):
+    url = get_url(id)
     html = get_html(url)
     soup = BeautifulSoup(html, 'html5lib')
 

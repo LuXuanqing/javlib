@@ -18,14 +18,14 @@ axios.get('http://localhost:5000/content')
         let app = new Vue({
             el: '#app',
             data: {
-                bangou: '',
+                id: '',
                 currentPic: {},
                 showPreview: false,
                 info: {}
             },
             methods: {
                 getInfo: function () {
-                    url = 'http://localhost:5000/info/' + this.bangou
+                    url = 'http://localhost:5000/info/' + this.id
                     axios.get(url)
                         .then(function (response) {
                             this.info = response.data
@@ -43,9 +43,9 @@ axios.get('http://localhost:5000/content')
                 }
             },
             created: function() {
-                let bangou = document.querySelector('#video_id td.text').innerText
-                this.bangou = bangou
-                let url = 'http://localhost:5000/info/' + this.bangou
+                let id = document.querySelector('#video_id td.text').innerText
+                this.id = id
+                let url = 'http://localhost:5000/info/' + this.id
                 axios.get(url)
                     .then(res => {
                         this.info = res.data
