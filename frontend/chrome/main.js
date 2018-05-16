@@ -14,45 +14,68 @@ axios.get('http://localhost:5000/content')
     })
     .catch(err => console.log(err))
 
-    function initVue() {
-        let app = new Vue({
-            el: '#app',
-            data: {
-                id: '',
-                download: [],
-                preview: [],
-                curImg: {},
-                showImg: false,
+function initVue() {
+    let app = new Vue({
+        el: '#app',
+        data: {
+            info: {},
+            download: [],
+            preview: [],
+            curImg: {},
+            showImg: false,
+        },
+        methods: {
+            showThisImg: function (img) {
+                console.log(img)
+                this.curImg = img
+                this.showImg = true
             },
-            methods: {
-                showThisImg: function (img) {
-                    console.log(img)
-                    this.curImg = img
-                    this.showImg = true
-                },
-                closeImg: function () {
-                    this.showImg = false
-                }
-            },
-            created: function() {
-                // get id
-                let id = document.querySelector('#video_id td.text').innerText
-                this.id = id
-                // get preview
-                let base_url = 'http://localhost:5000/'
-                axios.get(base_url + 'preview/' + id)
-                    .then(res => {
-                        // console.log(res.data)
-                        this.preview = res.data
-                    })
-                    .catch(err => console.log(err))
-                // get download link
-                axios.get(base_url + 'download/' + id)
-                    .then(res => {
-                        // console.log(res.data)
-                        this.download = res.data
-                    })
-                    .catch(err => console.log(err))
+            closeImg: function () {
+                this.showImg = false
             }
-        })
-    }
+        },
+        created: function () {
+            // get info
+            function getList(query) {
+                var list = []
+                spans = document.querySelectorAll(query)
+                spans.forEach(span => {
+                    if (span.querySelector('.alias')) {
+                        let name = span.querySelector('.star').innerText
+                        let alias = span.querySelector('.alias').innerText
+                        list.push(name+'('+alias+')')
+                    } else {
+                        list.push(span.innerText)
+                    }
+                })
+                return list
+            }
+            this.info = {
+                'id': document.querySelector('#video_id td.text').innerText,
+                'cast': getList('#video_cast span.cast'),
+                'genres': getList('#video_genres span.genre')
+            }
+            console.log(this.info)
+            // get preview
+            let base_url = 'http://localhost:5000/'
+            axios.get(base_url + 'preview/' + this.info.id, {
+                    params: {
+                        'cast': JSON.stringify(this.info.cast),
+                        'genres': JSON.stringify(this.info.genres)
+                    }
+                })
+                .then(res => {
+                    // console.log(res.data)
+                    this.preview = res.data
+                })
+                .catch(err => console.log(err))
+            // get download link
+            axios.get(base_url + 'download/' + this.info.id)
+                .then(res => {
+                    // console.log(res.data)
+                    this.download = res.data
+                })
+                .catch(err => console.log(err))
+        }
+    })
+}
