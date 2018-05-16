@@ -31,21 +31,21 @@ def get_html(url):
         return ''
 
 
-def get_links(bangou):
+def get_download(bangou):
     url = get_url(bangou)
     html = get_html(url)
     soup = BeautifulSoup(html, 'html5lib')
     items = soup.select('div.data-list div[class$=row]')
-    links = []
+    download = []
     for item in items:
         link = {}
         link['title'] = item.find('a')['title']
         link['link'] = item.find('a')['href']
         link['size'] = item.find(class_='size').text
         link['date'] = item.find(class_='date').text
-        links.append(link)
-    return links
+        download.append(link)
+    return download
 
 
 if __name__ == '__main__':
-    print(get_links('KAWD-889'))
+    print(get_download('KAWD-889'))

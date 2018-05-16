@@ -3,7 +3,7 @@
     <div class="header">{{ id }}的信息</div>
     <hr class="grey">
 
-    <div id="links">
+    <div id="download">
         <table>
             <thead>
                 <tr>
@@ -13,25 +13,25 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="link in info.links">
+                <tr v-for="item in download">
                     <td>
-                        <a target=_blank v-bind:href="link.link">{{ link.title }}</a>
+                        <a target=_blank v-bind:href="item.link">{{ item.title }}</a>
                     </td>
-                    <td>{{ link.size }}</td>
-                    <td>{{ link.date }}</td>
+                    <td>{{ item.size }}</td>
+                    <td>{{ item.date }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
     <hr class="grey">
 
-    <div id="pics">
-        <a target=_blank v-for="pic in info.pics" :href="pic.full" v-on:click.prevent="showThisPic(pic)">
-            <img :src="pic.thumb" v-bind:title="pic.title">
+    <div id="preview">
+        <a target=_blank v-for="item in preview" :href="item.full" v-on:click.prevent="showThisImg(item)">
+            <img :src="item.thumb" :title="item.title">
         </a>
     </div>
-    <div v-if="showPreview" v-on:click="closePreview">
-        <img :src="currentPic.full">
+    <div v-if="showImg" v-on:click="closeImg">
+        <img :src="curImg.full">
     </div>
     <hr class="grey">
 </div>

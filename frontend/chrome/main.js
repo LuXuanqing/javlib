@@ -19,36 +19,38 @@ axios.get('http://localhost:5000/content')
             el: '#app',
             data: {
                 id: '',
-                currentPic: {},
-                showPreview: false,
-                info: {}
+                download: [],
+                preview: [],
+                curImg: {},
+                showImg: false,
             },
             methods: {
-                getInfo: function () {
-                    url = 'http://localhost:5000/info/' + this.id
-                    axios.get(url)
-                        .then(function (response) {
-                            this.info = response.data
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        })
+                showThisImg: function (img) {
+                    console.log(img)
+                    this.curImg = img
+                    this.showImg = true
                 },
-                showThisPic: function (pic) {
-                    this.showPreview = true
-                    this.currentPic = pic
-                },
-                closePreview: function () {
-                    this.showPreview = false
+                closeImg: function () {
+                    this.showImg = false
                 }
             },
             created: function() {
+                // get id
                 let id = document.querySelector('#video_id td.text').innerText
                 this.id = id
-                let url = 'http://localhost:5000/info/' + this.id
-                axios.get(url)
+                // get preview
+                let base_url = 'http://localhost:5000/'
+                axios.get(base_url + 'preview/' + id)
                     .then(res => {
-                        this.info = res.data
+                        // console.log(res.data)
+                        this.preview = res.data
+                    })
+                    .catch(err => console.log(err))
+                // get download link
+                axios.get(base_url + 'download/' + id)
+                    .then(res => {
+                        // console.log(res.data)
+                        this.download = res.data
                     })
                     .catch(err => console.log(err))
             }

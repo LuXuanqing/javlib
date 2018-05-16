@@ -24,24 +24,22 @@ def get_url(id):
     return base_url + id
 
 
-def get_pics(id):
+def get_preview(id):
     url = get_url(id)
     html = get_html(url)
     soup = BeautifulSoup(html, 'html5lib')
-
     # 预览图的DOM结构：<a class="sample-box" href=full><div><img src=thumb></div></a>
     samples = soup.find_all(class_='sample-box')
-
-    pics = []
+    preview = []
     for sample in samples:
-        pic = {
+        p = {
             'full': sample['href'],
             'thumb': sample.find('img')['src'],
             'title': sample.find('img')['title']
         }
-        pics.append(pic)
-    return pics
+        preview.append(p)
+    return preview
 
 
 if __name__ == '__main__':
-    print(get_pics('MIDE-535'))
+    print(get_preview('MIDE-535'))

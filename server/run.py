@@ -1,18 +1,27 @@
 from flask import Flask, jsonify, send_file, make_response
-from javbus import get_pics
-from btsow import get_links
+from javbus import get_preview
+from btsow import get_download
 
 app = Flask(__name__)
 
-@app.route('/info/<bangou>')
-def info(bangou):
-    pics = get_pics(bangou)
-    links = get_links(bangou)
-    info = {'pics': pics, 'links': links}
+
+@app.route('/preview/<id>')
+def preview(id):
+    preview = get_preview(id)
     # 允许跨域
-    res = jsonify(info)
+    res = jsonify(preview)
     res.headers['Access-Control-Allow-Origin'] = '*'
     return res
+
+
+@app.route('/download/<id>')
+def download(id):
+    download = get_download(id)
+    # 允许跨域
+    res = jsonify(download)
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    return res
+
 
 @app.route('/content')
 def content():
@@ -20,4 +29,6 @@ def content():
     res.headers['Access-Control-Allow-Origin'] = '*'
     return res
 
-app.run(debug=True)
+
+if __name__ == '__main__':
+    app.run(debug=True)
