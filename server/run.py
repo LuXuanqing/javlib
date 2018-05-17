@@ -1,13 +1,20 @@
 from flask import Flask, jsonify, send_file, make_response
-from javbus import get_preview
-from btsow import get_download
+import javbus
+import btsow
+import db
 
 app = Flask(__name__)
 
 
 @app.route('/preview/<id>')
 def preview(id):
-    preview = get_preview(id)
+    if db.is_exist(id):
+        print('fetch from local database')
+        preview = db.get_preview_by_id(id)
+    else:
+        print('fetch from online webpage')
+        preview = javbus.get_preview(id)
+        db.insert_movie(id, preview)
     # 允许跨域
     res = jsonify(preview)
     res.headers['Access-Control-Allow-Origin'] = '*'
@@ -16,7 +23,7 @@ def preview(id):
 
 @app.route('/download/<id>')
 def download(id):
-    download = get_download(id)
+    download = btsow.get_download(id)
     # 允许跨域
     res = jsonify(download)
     res.headers['Access-Control-Allow-Origin'] = '*'
