@@ -12,7 +12,7 @@ HEADERS = {
 
 def get_html(url):
     try:
-        r = requests.get(url, headers=HEADERS)
+        r = requests.get(url)
         return r.text
     except Exception as err:
         print(err)
@@ -42,4 +42,4 @@ def get_preview(id):
 
 
 if __name__ == '__main__':
-    print(get_preview('MIDE-535'))
+    print(get_preview('LKD-004'))

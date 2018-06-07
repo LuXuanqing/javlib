@@ -1,8 +1,14 @@
 <div id="app">
+    <!-- last visit time -->
     <hr class="grey">
     <div class="header">{{ info.id }}的信息</div>
+    <hr class="grey">    
+    <div id="last">
+        <p>上次访问这个页面的时间： {{ getLastVisit }}</p>
+    </div>
     <hr class="grey">
-
+    <!-- download links -->
+    <div class="header">下载链接（from btsow）</div>
     <div id="download">
         <table>
             <thead>
@@ -24,7 +30,8 @@
         </table>
     </div>
     <hr class="grey">
-
+    <!-- preview -->
+    <div class="header">{{ info.id }}的预览图（from javbus）</div>
     <div id="preview">
         <a target=_blank v-for="item in preview" :href="item.full" v-on:click.prevent="showThisImg(item)">
             <img :src="item.thumb" :title="item.title">
