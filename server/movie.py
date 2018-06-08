@@ -36,12 +36,18 @@ class Movie():
     def cast(self, value):
         db.setone(self.id, '"cast"', value)
 
-    def log(self):
-        db.insert_log(self.id)
+    def log(self, domain):
+        db.insert_log(self.id, domain)
 
     @property
     def last_visit(self):
-        return db.get_log(self.id)
+        result = db.get_log(self.id)
+        if result is None:
+            return None
+        return {
+            'timestamp': result[0],
+            'domain': result[1]
+        }
 
 
 
@@ -51,6 +57,6 @@ if __name__ == '__main__':
     # for id in ids:
     #     av = Movie(id)
     #     av.create()
-    av = Movie('TEST-001')
-    print(dir(av))
+    av = Movie('ATID-298')
+    print(av.last_visit)
     # help(av)

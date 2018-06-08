@@ -4,7 +4,9 @@
     <div class="header">{{ id }}的信息</div>
     <hr class="grey">
     <div id="last">
-        <p>上次访问这个页面的时间： {{ formatedTime }}</p>
+        <p>上次访问这个页面的时间：{{ formatedTime }} @
+            <span v-if="hasDomain">{{ info.last_visit.domain }}</span>
+        </p>
     </div>
     <hr class="grey">
     <!-- download links -->

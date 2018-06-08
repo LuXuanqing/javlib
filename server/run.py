@@ -41,6 +41,9 @@ def get_preview(id, internal=False):
 
         return jsonify(preview)
     else:
+        # log
+        av.log('javbus')
+
         preview = json.loads(request.get_data())
         # 只要传来的preview数据不为空，每次都会更新local db中的数据
         if preview:
@@ -49,6 +52,12 @@ def get_preview(id, internal=False):
                 av.create()
             av.preview = preview
             return jsonify(success=True)
+
+@app.route('/log/<id>')
+def get_last_visit(id):
+    av = Movie(id)
+    data = av.last_visit
+    return jsonify(data)
 
 
 @app.route('/info/<id>', methods=['POST', 'GET'])
@@ -64,10 +73,10 @@ def info(id):
             'download': btsow.get_download(id),  # 每次都从btsow抓取
             'genres': av.genres,
             'cast': av.cast,
-            'last_visit': av.last_visit
+            'last_visit': json.loads(get_last_visit(id).get_data().decode())
         }
         # log
-        av.log()
+        av.log('javlib')
         return jsonify(info)
     else:
         data = json.loads(request.get_data())

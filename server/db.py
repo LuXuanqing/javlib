@@ -60,29 +60,30 @@ def setone(id, field, value):
         print('the {} of {} has been updated'.format(field, id))
 
 
-def insert_log(id):
+def insert_log(id, domain):
     with sqlite3.connect(dbpath) as conn:
         c = conn.cursor()
         now = time.time()
-        c.execute('INSERT INTO access_log VALUES (?, ?)', (now, id))
-        print('{} is visited at {}'.format(id, now))
+        c.execute('INSERT INTO access_log VALUES (?, ?, ?)', (now, id, domain))
+        print('{}({}) is visited at {}'.format(id, domain, now))
 
 
 def get_log(id):
     with sqlite3.connect(dbpath) as conn:
         c = conn.cursor()
-        c.execute('SELECT time FROM access_log WHERE id=? ORDER BY time DESC',
+        c.execute('SELECT time, domain FROM access_log WHERE id=? ORDER BY time DESC',
                   (id, ))
-        try:
-            timestamp = c.fetchone()[0]
-            return timestamp
-        except TypeError as err:
-            print(err)
-            print("{} doesn't exist in movies table".format(id))
-            return -2
+        return c.fetchone()
+        # try:
+        #     timestamp, domain = c.fetchone()
+        #     return timestamp, domain
+        # except TypeError as err:
+        #     print(err)
+        #     print("{} doesn't exist in movies table".format(id))
+        #     return -2
 
 
 if __name__ == '__main__':
-    ids = ['TEST-001', 'TEST-002', 'TEST-003', 'TEST-404']
-    for id in ids:
-        print(get_log(id))
+    # ids = ['TEST-001', 'TEST-002', 'TEST-003', 'TEST-404']
+    # for id in ids:
+    print(get_log('ATID-298'))

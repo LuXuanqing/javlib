@@ -12,16 +12,17 @@ fetch(`http://localhost:5000/content`)
     .then(res => res.text())
     .then(text => {
         document.querySelector('#app-container').innerHTML = text
+        console.log('html is inserted')
         initVue()
     })
     .catch(err => console.log(err))
 
 
 function initVue() {
-
     let app = new Vue({
         el: '#app',
         data: {
+            initialized: false,
             id: '',
             info: {},
             infoOnThisPage: {},
@@ -39,13 +40,19 @@ function initVue() {
         },
         computed: {
             formatedTime: function () {
-                let time_python = this.info.last_visit
-                if (time_python == -2) {
+                if (!this.info.last_visit) {
+                    return false
+                }
+                if (!this.info.last_visit.timestamp) {
                     return '以前从来没看过'
                 }
-                let timestamp = parseInt(time_python * 1000)
+                let timestamp = parseInt(this.info.last_visit.timestamp * 1000)
                 let date = new Date(timestamp)
                 return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+            },
+            hasDomain: function () {
+                if (!this.info.last_visit) return false
+                return this.info.last_visit.domain
             },
             javbusLink: function () {
                 return `https://www.javbus6.pw/${this.id}`
@@ -85,6 +92,7 @@ function initVue() {
                     .then(res => res.json())
                     .then(myjson => {
                         this.info = myjson
+                        console.log(myjson)
                         this.postInfo()
                     })
                     .catch(err => console.log(err))
