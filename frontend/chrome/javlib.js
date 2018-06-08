@@ -39,10 +39,13 @@ function initVue() {
         },
         computed: {
             formatedTime: function () {
-                let timestamp = parseInt(this.info.last_visit * 1000)
+                let time_python = this.info.last_visit
+                if (time_python == -2) {
+                    return '以前从来没看过'
+                }
+                let timestamp = parseInt(time_python * 1000)
                 let date = new Date(timestamp)
-                let rst = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-                return rst
+                return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
             },
             javbusLink: function () {
                 return `https://www.javbus6.pw/${this.id}`

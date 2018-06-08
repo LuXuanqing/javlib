@@ -6,7 +6,11 @@
     "content_scripts": [
         {
             "matches": ["http://www.javlibrary.com/cn/?v=*"],
-            "js": ["vue.js", "axios.js", "main.js"]
+            "js": ["vue.js", "javlib.js"]
+        },
+        {
+            "matches": ["https://www.javbus6.pw/*-*"],
+            "js": ["javbus.js"]
         }
     ]
 }

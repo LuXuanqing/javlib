@@ -55,7 +55,7 @@ def getone(id, field):
 def setone(id, field, value):
     with sqlite3.connect(dbpath) as conn:
         c = conn.cursor()
-        s = json.dumps(value)
+        s = json.dumps(value, ensure_ascii=False)
         c.execute('UPDATE movies SET {}=? WHERE id=?'.format(field), (s, id))
         print('the {} of {} has been updated'.format(field, id))
 
