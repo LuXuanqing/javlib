@@ -1,4 +1,4 @@
-import db_t as db
+import db as db
 
 
 class Movie():
