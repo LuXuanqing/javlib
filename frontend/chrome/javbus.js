@@ -24,6 +24,6 @@ if (preview.length > 0 && id) {
             'Content-Type': 'application/json'
         })
     }).then(res => res.json())
-    .then(json => console.log(json))
+    .then(json => console.log(`last visit: ${json.last_visit.timestamp}@${json.last_visit.domain}`))
     .catch(error => console.error('Error:', error))
 }

@@ -41,9 +41,7 @@ def get_preview(id, internal=False):
 
         return jsonify(preview)
     else:
-        # log
-        av.log('javbus')
-
+        # 这里是从javbus POST preview信息，同时获取last visit
         preview = json.loads(request.get_data())
         # 只要传来的preview数据不为空，每次都会更新local db中的数据
         if preview:
@@ -51,7 +49,10 @@ def get_preview(id, internal=False):
             if not av.exist:
                 av.create()
             av.preview = preview
-            return jsonify(success=True)
+        # log
+        av.log('javbus')
+        last_visit = json.loads(get_last_visit(id).get_data().decode())
+        return jsonify(success=True,last_visit=last_visit)
 
 @app.route('/log/<id>')
 def get_last_visit(id):
