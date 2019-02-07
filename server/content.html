@@ -37,7 +37,7 @@
         <a target=_blank :href="javbusLink">预览图 (from javbus)</a>
     </div>
     <div id="preview">
-        <div v-if="hasPreview">
+        <div v-if="hasPreview" v-on:keyup.right="nextImg"v-on:keyup.left="previousImg">
             <a target=_blank v-for="item in info.preview" :href="item.full" v-on:click.prevent="showThisImg(item)">
                 <img :src="item.thumb" :title="item.title">
             </a>
