@@ -55,7 +55,7 @@ function initVue() {
                 return this.info.last_visit.domain
             },
             javbusLink: function () {
-                return `https://www.javbus6.pw/${this.id}`
+                return `https://www.javbus.com/${this.id}`
             },
             hasPreview: function () {
                 if (!this.info.preview) return false
