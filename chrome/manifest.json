@@ -1,0 +1,15 @@
+{
+    "manifest_version": 2,
+    "name": "previews for javlibrary",
+    "version": "0.1.0",
+    "description": "显示影片预览图",
+    "content_scripts": [{
+            "matches": ["http://www.javlibrary.com/cn/?v=*"],
+            "js": ["vue.js", "javlib.js"]
+        },
+        {
+            "matches": ["https://www.javbus6.pw/*-*"],
+            "js": ["javbus.js"]
+        }
+    ]
+}
