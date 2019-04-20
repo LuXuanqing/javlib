@@ -1,5 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
+# create and configure logger
+import logging
+logging.basicConfig(filename='test.log',
+                    filemode='w',
+                    level=logging.DEBUG,
+                    format='%(asctime)s,%(name)s,%(levelname)s,%(message)s')
+logger = logging.getLogger(__name__)
 
 BASE_URL = 'https://www.javbus.com/'
 HEADERS = {
@@ -23,9 +30,10 @@ PROXIES = {
 def get_html(url):
     try:
         r = requests.get(url, timeout=5, proxies=PROXIES)
+        logger.info('got html')
         return r.text
     except Exception as err:
-        print(err)
+        logger.error('failed to get html')
         return ''
 
 
