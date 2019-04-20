@@ -2,11 +2,23 @@ import sqlite3
 import json
 import time
 
-dbpath = '/Users/luxuanqing/FE/javlib/server/jav.db'
+DBPATH = '/Users/luxuanqing/FE/javlib/jav.db'
 
+'''
+schema
+id: String, 番号，形如EKDV-413
+imgs: Text, 图片的信息的json string
+casts: String, 演员信息的json string
+genres: String, 类型的json string
+last_updated: DateTime, 上次修改时间，最好做到每次获取图片\不感兴趣 时自动更新
+last_visited_url: String, 上次访问的网址
+is_disliked: Boolean, 是否不感兴趣
+need_hd
 
+'''
+# 检查该番号是否存在于数据库中
 def exist(id):
-    with sqlite3.connect(dbpath) as conn:
+    with sqlite3.connect(DBPATH) as conn:
         c = conn.cursor()
         c.execute('SELECT * FROM movies WHERE id=?', (id, ))
         if c.fetchone():
@@ -16,7 +28,7 @@ def exist(id):
 
 
 def insert_movie(id):
-    with sqlite3.connect(dbpath) as conn:
+    with sqlite3.connect(DBPATH) as conn:
         c = conn.cursor()
         try:
             c.execute('INSERT INTO movies VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -38,7 +50,7 @@ def getone(id, field):
         None: 该字段为null
         -2: 表中没有这个id
         '''
-    with sqlite3.connect(dbpath) as conn:
+    with sqlite3.connect(DBPATH) as conn:
         c = conn.cursor()
         c.execute('SELECT {} FROM movies WHERE id=?'.format(field), (id, ))
         try:
@@ -53,7 +65,7 @@ def getone(id, field):
 
 
 def setone(id, field, value):
-    with sqlite3.connect(dbpath) as conn:
+    with sqlite3.connect(DBPATH) as conn:
         c = conn.cursor()
         s = json.dumps(value, ensure_ascii=False)
         c.execute('UPDATE movies SET {}=? WHERE id=?'.format(field), (s, id))
@@ -61,7 +73,7 @@ def setone(id, field, value):
 
 
 def insert_log(id, domain):
-    with sqlite3.connect(dbpath) as conn:
+    with sqlite3.connect(DBPATH) as conn:
         c = conn.cursor()
         now = time.time()
         c.execute('INSERT INTO access_log VALUES (?, ?, ?)', (now, id, domain))
@@ -69,7 +81,7 @@ def insert_log(id, domain):
 
 
 def get_log(id):
-    with sqlite3.connect(dbpath) as conn:
+    with sqlite3.connect(DBPATH) as conn:
         c = conn.cursor()
         c.execute('SELECT time, domain FROM access_log WHERE id=? ORDER BY time DESC',
                   (id, ))
