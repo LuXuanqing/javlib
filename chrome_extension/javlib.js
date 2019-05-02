@@ -12,7 +12,7 @@ fetch(`http://localhost:5000/content`)
     .then(text => {
         document.querySelector('#app-container').innerHTML = text
         console.log('Inserted HTML')
-        initVue()
+        // initVue()
     })
     .catch(err => console.log(err))
 
