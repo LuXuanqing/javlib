@@ -1,0 +1,37 @@
+<div id="app">
+    <!-- last visit time -->
+    <hr class="grey">
+    <div id="history">
+        <h2>上次访问</h2>
+        <p>{{ formatedTime }} @
+            <span v-if="hasDomain">{{ info.last_visit.domain }}</span>
+            <!--  TODO implement this hyperlink to site-->
+        </p>
+    </div>
+    <div id="operations">
+        <button>不感兴趣</button>
+        <button>需要HD资源</button>
+    </div>
+    <hr class="grey">
+
+    <!-- preview -->
+    <div id="preview">
+        <h2>预览图</h2>
+        <div v-if="hasPreview" v-on:keyup.right="nextImg" v-on:keyup.left="previousImg">
+            <a target=_blank v-for="item in info.preview" :href="item.full" v-on:click.prevent="showThisImg(item)">
+                <img :src="item.thumb" :title="item.title">
+            </a>
+            <div class="fullpicture" v-if="curImg.show">
+                <button v-on:click="previousImg" :disabled="atFirst">上一张</button>
+                <img :src="curImg.img.full" v-on:click="closeImg">
+                <button v-on:click="nextImg" :disabled="atLast">下一张</button>
+            </div>
+        </div>
+        <div v-else>
+            <p>no preview</p>
+            <button v-on:click="getPreview">fetch again (from javbus</button>
+        </div>
+    </div>
+
+    <hr class="grey">
+</div>
