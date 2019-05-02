@@ -11187,7 +11187,7 @@
 
     // #3663: IE encodes newlines inside attribute values while other browsers don't
     var shouldDecodeNewlines = inBrowser ? getShouldDecode(false) : false;
-    // #6828: chrome encodes content in a[href]
+    // #6828: chrome_extension encodes content in a[href]
     var shouldDecodeNewlinesForHref = inBrowser ? getShouldDecode(true) : false;
 
     /*  */
