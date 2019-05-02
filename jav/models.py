@@ -39,7 +39,7 @@ class Av(db.Model):
             self.imgs = json.dumps(self.imgs)
 
         return self
-
+    # TODO 监听commit等事件，自动实现这两个方法
 
 class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,3 +49,4 @@ class History(db.Model):
 
     def __repr__(self):
         return '<History {}@{}>'.format(self.av_id, self.timestamp)
+
