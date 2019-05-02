@@ -19,10 +19,10 @@
         <h2>预览图</h2>
         <div v-if="imgs" @keyup.right="nextImg" @keyup.left="previousImg">
             <img v-for="img in imgs" @click="showThisImg(img)" :src="img.thumb" :title="img.title">
-            <div class="fullpicture" v-if="curImg.show">
-                <button @click="previousImg" :disabled="curImg.index == 0">上一张</button>
-                <img :src="imgs[curImg.index].full" @click="curImg.show = false">
-                <button @click="nextImg" :disabled="curImg.index == this.imgs.length - 1">下一张</button>
+            <div class="fullpicture" v-if="isShowImg">
+                <button @click="previousImg" :disabled="imgIdx <= 0">上一张</button>
+                <img :src="imgs[imgIdx].full" @click="isShowImg = false">
+                <button @click="nextImg" :disabled="imgIdx >= this.imgs.length - 1">下一张</button>
             </div>
         </div>
         <div v-else>

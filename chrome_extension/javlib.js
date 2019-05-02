@@ -13,14 +13,13 @@ fetch(`http://localhost:5000/content`)
     .then(text => {
         document.querySelector('#app-container').innerHTML = text
         console.info('Inserted HTML')
-        let myapp
-        initVue(myapp)
+        initVue()
     })
     .catch(err => console.error(err))
 
 
-function initVue(myapp) {
-    myapp = new Vue({
+function initVue() {
+    new Vue({
         el: '#app',
         data: {
             id: '',
@@ -28,30 +27,22 @@ function initVue(myapp) {
             casts: [],
             lastVisit: {},
             imgs: {},
-            curImg: {
-                index: 0,
-                show: false,
-            }
-        },
-        watch: {
-            'curImg.index': function () {
-                console.debug('index changed')
-                this.curImg.img = this.imgs[this.curImg.index]
-            }
+            imgIdx: 0,
+            isShowImg: false,
         },
         methods: {
             showThisImg: function (img) {
-                this.curImg.show = true
-                this.curImg.index = this.imgs.indexOf(img)
+                this.isShowImg = true
+                this.imgIdx = this.imgs.indexOf(img)
             },
             nextImg: function () {
-                if (this.curImg.index < this.imgs.length - 1) {
-                    this.curImg.index += 1
+                if (this.imgIdx < this.imgs.length - 1) {
+                    this.imgIdx += 1
                 }
             },
             previousImg: function () {
-                if (this.curImg.index > 0) {
-                    this.curImg.index -= 1
+                if (this.imgIdx > 0) {
+                    this.imgIdx -= 1
                 }
             },
             getPreview: function () {
