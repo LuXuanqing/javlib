@@ -44,13 +44,15 @@ def check_av(id, genres=None, casts=None):
     av.to_json()
     result = {
         'imgs': get_imgs_from_av(av),
-        'last_visit': {
+        'lastVisit': {
             'timestamp': None,
             'site': None
         }
     }
     # TODO implement上次访问
-    return jsonify(result)
+    res = make_response(jsonify(result))
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    return res
 
 
 def fetch_av(id):

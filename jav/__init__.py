@@ -6,6 +6,6 @@ app = Flask('jav')
 app.config.from_pyfile('settings.py')
 
 db = SQLAlchemy(app)
-cors = CORS(app)
+cors = CORS(app, supports_credentials=True)
 
 from jav import views, errors, commands

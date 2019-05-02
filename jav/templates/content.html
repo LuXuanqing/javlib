@@ -3,8 +3,8 @@
     <hr class="grey">
     <div id="history">
         <h2>上次访问</h2>
-        <p>{{ formatedTime }} @
-            <span v-if="hasDomain">{{ info.last_visit.domain }}</span>
+        <p>timestamp @
+            <span>site url</span>
             <!--  TODO implement this hyperlink to site-->
         </p>
     </div>
@@ -18,8 +18,8 @@
     <div id="preview">
         <h2>预览图</h2>
         <div v-if="hasPreview" v-on:keyup.right="nextImg" v-on:keyup.left="previousImg">
-            <a target=_blank v-for="item in info.preview" :href="item.full" v-on:click.prevent="showThisImg(item)">
-                <img :src="item.thumb" :title="item.title">
+            <a target=_blank v-for="img in imgs" :href="img.full" v-on:click.prevent="showThisImg(img)">
+                <img :src="img.thumb" :title="img.title">
             </a>
             <div class="fullpicture" v-if="curImg.show">
                 <button v-on:click="previousImg" :disabled="atFirst">上一张</button>
@@ -29,9 +29,8 @@
         </div>
         <div v-else>
             <p>no preview</p>
-            <button v-on:click="getPreview">fetch again (from javbus</button>
+            <button v-on:click="getPreview">fetch again from javbus</button>
         </div>
     </div>
-
     <hr class="grey">
 </div>

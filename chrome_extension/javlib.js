@@ -1,4 +1,5 @@
 'use strict'
+
 // HTML结构： div#app-container 插入到 div.socialmedia之前
 const appContainer = document.createElement('div')
 appContainer.setAttribute('id', 'app-container')
@@ -11,73 +12,57 @@ fetch(`http://localhost:5000/content`)
     .then(res => res.text())
     .then(text => {
         document.querySelector('#app-container').innerHTML = text
-        console.log('Inserted HTML')
-        // initVue()
+        console.info('Inserted HTML')
+        let myapp
+        initVue(myapp)
     })
-    .catch(err => console.log(err))
+    .catch(err => console.error(err))
 
 
-function initVue() {
-    let app = new Vue({
+function initVue(myapp) {
+    myapp = new Vue({
         el: '#app',
         data: {
-            initialized: false,
             id: '',
-            info: {},
-            infoOnThisPage: {},
+            genres: [],
+            casts: [],
+            lastVisit: {},
+            imgs: {},
             curImg: {
                 index: 0,
                 show: false,
                 img: {}
-            },
+            }
         },
         watch: {
             'curImg.index': function () {
-                console.log('index changed')
-                this.curImg.img = this.info.preview[this.curImg.index]
+                console.debug('index changed')
+                this.curImg.img = this.imgs[this.curImg.index]
             }
         },
         computed: {
-            formatedTime: function () {
-                if (!this.info.last_visit) {
-                    return false
-                }
-                if (!this.info.last_visit.timestamp) {
-                    return '以前从来没看过'
-                }
-                let timestamp = parseInt(this.info.last_visit.timestamp * 1000)
-                let date = new Date(timestamp)
-                return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-            },
-            hasDomain: function () {
-                if (!this.info.last_visit) return false
-                return this.info.last_visit.domain
-            },
-            javbusLink: function () {
-                return `https://www.javbus.com/${this.id}`
-            },
             hasPreview: function () {
-                if (!this.info.preview) return false
-                return this.info.preview.length > 0
+                if (!this.imgs) return false
+                return this.imgs.length > 0
             },
             atFirst: function () {
                 return this.curImg.index == 0
             },
             atLast: function () {
-                return this.curImg.index == this.info.preview.length - 1
+                return this.curImg.index == this.imgs.length - 1
             }
         },
         methods: {
             showThisImg: function (img) {
                 this.curImg.img = img
                 this.curImg.show = true
-                this.curImg.index = this.info.preview.indexOf(img)
+                this.curImg.index = this.imgs.indexOf(img)
             },
             closeImg: function () {
                 this.curImg.show = false
             },
             nextImg: function () {
-                if (this.curImg.index < this.info.preview.length - 1) {
+                if (this.curImg.index < this.imgs.length - 1) {
                     this.curImg.index += 1
                 }
             },
@@ -86,94 +71,59 @@ function initVue() {
                     this.curImg.index -= 1
                 }
             },
-            getInfo: function () {
-                fetch(`http://localhost:5000/info/${this.id}`)
-                    .then(res => res.json())
-                    .then(myjson => {
-                        this.info = myjson
-                        console.log(myjson)
-                        this.postInfo()
-                    })
-                    .catch(err => console.log(err))
-                console.log('get info ok')
-            },
             getPreview: function () {
-                fetch(`http://localhost:5000/preview/${this.id}?force=1`)
-                    .then(res => res.json())
-                    .then(myjson => this.info.preview = myjson)
-                    .catch(err => console.log(err))
-            },
-            getInfoOnThisPage: function () {
-                function getList(query) {
-                    let list = []
-                    let spans = document.querySelectorAll(query)
-                    spans.forEach(span => {
-                        if (span.querySelector('.alias')) {
-                            let name = span.querySelector('.star').innerText
-                            let alias = span.querySelector('.alias').innerText
-                            list.push(`${name}(${alias})`)
-                        } else {
-                            list.push(span.innerText)
-                        }
-                    })
-                    return list
-                }
-
-                this.infoOnThisPage = {
-                    cast: getList('#video_cast span.cast'),
-                    genres: getList('#video_genres span.genre')
-                }
-                console.log('get info on this page ok')
-            },
-            getId: function () {
-                this.id = document.querySelector('#video_id td.text').innerText
-            },
-            postInfo: function () {
-                /**
-                 * 检测是否为null或空数组
-                 * @param {null, Array} val
-                 */
-                function isEmpty(val) {
-                    if (val === null) return true
-                    if (Array.isArray(val)) return val.length == 0
-                    return !val
-                }
-
-                let data = {
-                    genres: [],
-                    cast: []
-                }
-                let postGenres = isEmpty(this.info.genres) && !isEmpty(this.infoOnThisPage.genres)
-                let postCast = isEmpty(this.info.cast) && !isEmpty(this.infoOnThisPage.cast)
-                if (postGenres) {
-                    data.genres = this.infoOnThisPage.genres
-                }
-                if (postCast) {
-                    data.cast = this.infoOnThisPage.cast
-                }
-                if (postGenres || postCast) {
-                    fetch(`http://localhost:5000/info/${this.id}`, {
-                        method: 'POST',
-                        body: JSON.stringify(data), // data can be `string` or {object}!
-                        headers: new Headers({
-                            'Content-Type': 'application/json'
-                        })
-                    }).then(res => res.json())
-                        .then(json => {
-                            console.log('post success:', json.success)
-                            this.info.genres = json.genres
-                            this.info.cast = json.cast
-                        })
-                        .catch(error => console.error('Error:', error))
-                } else {
-                    console.log('no need to post')
-                }
+                //TODO update this methods
             }
         },
         created: function () {
-            this.getId()
-            this.getInfoOnThisPage()
-            this.getInfo()
+            //get ID
+            this.id = document.querySelector('#video_id td.text').innerText
+            console.info(`Got id: ${this.id}`)
+
+            //get casts and genres
+            function getList(query) {
+                let list = []
+                let spans = document.querySelectorAll(query)
+                spans.forEach(span => {
+                    if (span.querySelector('.alias')) {
+                        let name = span.querySelector('.star').innerText
+                        let alias = span.querySelector('.alias').innerText
+                        list.push(`${name}(${alias})`)
+                    } else {
+                        list.push(span.innerText)
+                    }
+                })
+                return list
+            }
+
+            this.casts = getList('#video_cast span.cast')
+            console.info(`Got casts: ${this.casts}`)
+            this.genres = getList('#video_genres span.genre')
+            console.info(`Got genres: ${this.genres}`)
+
+            // post casts&genres then get imgs&lastVisit
+            let data = {
+                genres: this.genres,
+                cast: this.casts
+            }
+            fetch(`http://localhost:5000/api/av/${this.id}`, {
+                method: 'POST',
+                body: JSON.stringify(data), // data can be `string` or {object}!
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                })
+            }).then(response =>
+                response.json().then(data => ({
+                        data: data,
+                        status: response.status
+                    })
+                ).then(res => {
+                    console.log(res.status, res.data)
+                    this.imgs = res.data.imgs
+                    this.lastVisit = res.data.lastVisit
+                }))
+                .catch(error => console.log(error))
+
         }
     })
 
