@@ -15,16 +15,16 @@
     <hr class="grey">
 
     <!-- preview images -->
-    <div id="preview">
+    <div id="imgs">
         <h2>预览图</h2>
-        <div v-if="hasPreview" v-on:keyup.right="nextImg" v-on:keyup.left="previousImg">
+        <div v-if="imgs" v-on:keyup.right="nextImg" v-on:keyup.left="previousImg">
             <a target=_blank v-for="img in imgs" :href="img.full" v-on:click.prevent="showThisImg(img)">
                 <img :src="img.thumb" :title="img.title">
             </a>
             <div class="fullpicture" v-if="curImg.show">
-                <button v-on:click="previousImg" :disabled="atFirst">上一张</button>
+                <button v-on:click="previousImg" :disabled="curImg.index == 0">上一张</button>
                 <img :src="curImg.img.full" v-on:click="closeImg">
-                <button v-on:click="nextImg" :disabled="atLast">下一张</button>
+                <button v-on:click="nextImg" :disabled="curImg.index == this.imgs.length - 1">下一张</button>
             </div>
         </div>
         <div v-else>

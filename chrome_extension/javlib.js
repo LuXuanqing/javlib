@@ -40,18 +40,6 @@ function initVue(myapp) {
                 this.curImg.img = this.imgs[this.curImg.index]
             }
         },
-        computed: {
-            hasPreview: function () {
-                if (!this.imgs) return false
-                return this.imgs.length > 0
-            },
-            atFirst: function () {
-                return this.curImg.index == 0
-            },
-            atLast: function () {
-                return this.curImg.index == this.imgs.length - 1
-            }
-        },
         methods: {
             showThisImg: function (img) {
                 this.curImg.img = img
