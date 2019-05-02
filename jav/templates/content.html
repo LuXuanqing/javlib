@@ -17,19 +17,17 @@
     <!-- preview images -->
     <div id="imgs">
         <h2>预览图</h2>
-        <div v-if="imgs" v-on:keyup.right="nextImg" v-on:keyup.left="previousImg">
-            <a target=_blank v-for="img in imgs" :href="img.full" v-on:click.prevent="showThisImg(img)">
-                <img :src="img.thumb" :title="img.title">
-            </a>
+        <div v-if="imgs" @keyup.right="nextImg" @keyup.left="previousImg">
+            <img v-for="img in imgs" @click="showThisImg(img)" :src="img.thumb" :title="img.title">
             <div class="fullpicture" v-if="curImg.show">
-                <button v-on:click="previousImg" :disabled="curImg.index == 0">上一张</button>
-                <img :src="curImg.img.full" v-on:click="closeImg">
-                <button v-on:click="nextImg" :disabled="curImg.index == this.imgs.length - 1">下一张</button>
+                <button @click="previousImg" :disabled="curImg.index == 0">上一张</button>
+                <img :src="imgs[curImg.index].full" @click="curImg.show = false">
+                <button @click="nextImg" :disabled="curImg.index == this.imgs.length - 1">下一张</button>
             </div>
         </div>
         <div v-else>
             <p>no preview</p>
-            <button v-on:click="getPreview">fetch again from javbus</button>
+            <button @click="getPreview">fetch again from javbus</button>
         </div>
     </div>
     <hr class="grey">

@@ -31,7 +31,6 @@ function initVue(myapp) {
             curImg: {
                 index: 0,
                 show: false,
-                img: {}
             }
         },
         watch: {
@@ -42,12 +41,8 @@ function initVue(myapp) {
         },
         methods: {
             showThisImg: function (img) {
-                this.curImg.img = img
                 this.curImg.show = true
                 this.curImg.index = this.imgs.indexOf(img)
-            },
-            closeImg: function () {
-                this.curImg.show = false
             },
             nextImg: function () {
                 if (this.curImg.index < this.imgs.length - 1) {
