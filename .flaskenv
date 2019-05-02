@@ -1,0 +1,2 @@
+FLASK_APP=jav
+FLASK_ENV=development

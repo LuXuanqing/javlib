@@ -11,7 +11,7 @@ fetch(`http://localhost:5000/content`)
     .then(res => res.text())
     .then(text => {
         document.querySelector('#app-container').innerHTML = text
-        console.log('html is inserted')
+        console.log('Inserted HTML')
         initVue()
     })
     .catch(err => console.log(err))
@@ -118,6 +118,7 @@ function initVue() {
                     })
                     return list
                 }
+
                 this.infoOnThisPage = {
                     cast: getList('#video_cast span.cast'),
                     genres: getList('#video_genres span.genre')
@@ -130,7 +131,7 @@ function initVue() {
             postInfo: function () {
                 /**
                  * 检测是否为null或空数组
-                 * @param {null, Array} val 
+                 * @param {null, Array} val
                  */
                 function isEmpty(val) {
                     if (val === null) return true
@@ -152,12 +153,12 @@ function initVue() {
                 }
                 if (postGenres || postCast) {
                     fetch(`http://localhost:5000/info/${this.id}`, {
-                            method: 'POST',
-                            body: JSON.stringify(data), // data can be `string` or {object}!
-                            headers: new Headers({
-                                'Content-Type': 'application/json'
-                            })
-                        }).then(res => res.json())
+                        method: 'POST',
+                        body: JSON.stringify(data), // data can be `string` or {object}!
+                        headers: new Headers({
+                            'Content-Type': 'application/json'
+                        })
+                    }).then(res => res.json())
                         .then(json => {
                             console.log('post success:', json.success)
                             this.info.genres = json.genres
