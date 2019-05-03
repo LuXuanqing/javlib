@@ -22,7 +22,7 @@ def check_av(id, genres=None, casts=None):
     :param id: av的番号，例如SSNI-413
     :param genres: 类别，默认不穿，自动从request中解析
     :param casts: 演员，默认不穿，自动从request中解析
-    :return: {imgs}
+    :return:
     """
     av = fetch_av(id)
     last_visit = History.query.filter_by(av_id=id).order_by(History.timestamp.desc()).first()
@@ -47,15 +47,15 @@ def check_av(id, genres=None, casts=None):
         db.session.commit()
         logger.info('Updated info of {}'.format(av))
 
-    result = {
+    res = make_response(jsonify({
         'imgs': get_imgs_from_av(av),
         'lastVisit': {
             'timestamp': last_visit.timestamp if last_visit else None,
             'site': last_visit.site if last_visit else None
-        }
-    }
-
-    res = make_response(jsonify(result))
+        },
+        'isDislike': av.is_dislike,
+        'isNeedHd': av.is_need_hd
+    }))
     res.headers['Access-Control-Allow-Origin'] = '*'
     return res
 
@@ -95,7 +95,7 @@ def handle_av_imgs(id):
         pass
 
 
-@app.route('/api/av/<id>/dislike', methods=['PUT', 'POST'])
+@app.route('/api/av/<id>/dislike', methods=['PUT'])
 def av_dislike(id):
     """更新is dislike,request body中isDislike需要为布尔值"""
     is_dislike = request.get_json().get('isDislike')
@@ -111,7 +111,17 @@ def av_dislike(id):
     return res
 
 
-@app.route('/api/av/<id>/need-hd')
+@app.route('/api/av/<id>/needhd', methods=['PUT'])
 def av_need_hd(id):
-    # TODO implement this fn
-    pass
+    """更新is_need_hd, request body中isNeedHd需要为布尔值"""
+    is_need_hd = request.get_json().get('isNeedHd')
+    if not isinstance(is_need_hd, bool):
+        return jsonify(dict(success=False)), 400
+
+    av = fetch_av((id))
+    av.is_need_hd = is_need_hd
+    db.session.commit()
+    logger.info('Updated need_hd of {}'.format(av))
+    res = make_response(jsonify(dict(success=True)))
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    return res

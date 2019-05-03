@@ -3,7 +3,8 @@ import logging
 logging.basicConfig(filename='dev.log',
                     filemode='w',
                     level=logging.DEBUG,
-                    format='%(asctime)s, %(name)s, %(levelname)s: %(message)s')
+                    # format='%(levelname)s %(asctime)s %(name)s %(message)s',
+                    format='%(levelname)s %(name)s %(message)s',)
 
 
 def create_logger(name=__name__):

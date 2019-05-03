@@ -8,17 +8,24 @@ target.parentElement.insertBefore(appContainer, target)
 
 
 // 把app的html插入到 #app-container
-fetch(`http://localhost:5000/content`)
-    .then(res => res.text())
-    .then(text => {
-        document.querySelector('#app-container').innerHTML = text
+// fetch(`http://localhost:5000/content`)
+//     .then(res => res.text())
+//     .then(text => {
+//         document.querySelector('#app-container').innerHTML = text
+//         console.info('Inserted HTML')
+//         initVue()
+//     })
+//     .catch(err => console.error(err))
+axios(`http://localhost:5000/content`)
+    .then(res => {
+        document.querySelector('#app-container').innerHTML = res.data
         console.info('Inserted HTML')
-        initVue()
+        init()
     })
     .catch(err => console.error(err))
 
 
-function initVue() {
+function init() {
     new Vue({
         el: '#app',
         data: {
@@ -29,8 +36,22 @@ function initVue() {
             imgs: {},
             imgIdx: 0,
             isShowImg: false,
-            isDislike: true,
+            isDislike: false,
             isNeedHd: false
+        },
+        computed: {
+            timeFromNow: function () {
+                return moment(Date.parse(this.lastVisit.timestamp)).fromNow()
+            },
+            sitename: function () {
+                if (this.lastVisit.site.indexOf('javbus') > -1) {
+                    return 'JavBus'
+                } else if (this.lastVisit.site.indexOf('javlibrary') > -1) {
+                    return 'JavLibrary'
+                } else {
+                    return this.lastVisit.site
+                }
+            }
         },
         methods: {
             showThisImg: function (img) {
@@ -53,7 +74,22 @@ function initVue() {
                 //TODO update this methods
             },
             disLike: function () {
-                //TODO implement this method
+                axios.put(`http://localhost:5000/api/av/WANZ-801/dislike`, {
+                    isDislike: !this.isDislike
+                })
+                    .then(res => {
+                        this.isDislike = !this.isDislike
+                    })
+                    .catch(err => console.error(err))
+            },
+            needHd: function () {
+                axios.put(`http://localhost:5000/api/av/WANZ-801/needhd`, {
+                    isNeedHd: !this.isNeedHd
+                })
+                    .then(res => {
+                        this.isNeedHd = !this.isNeedHd
+                    })
+                    .catch(err => console.error(err))
             }
         },
         created: function () {
@@ -67,44 +103,34 @@ function initVue() {
                 let spans = document.querySelectorAll(query)
                 spans.forEach(span => {
                     if (span.querySelector('.alias')) {
-                        let name = span.querySelector('.star').innerText
-                        let alias = span.querySelector('.alias').innerText
+                        let name = span.querySelector('.star').innerText.trim()
+                        let alias = span.querySelector('.alias').innerText.trim()
                         list.push(`${name}(${alias})`)
                     } else {
-                        list.push(span.innerText)
+                        list.push(span.innerText.trim())
                     }
                 })
                 return list
             }
-
             this.casts = getList('#video_cast span.cast')
             console.info(`Got casts: ${this.casts}`)
             this.genres = getList('#video_genres span.genre')
             console.info(`Got genres: ${this.genres}`)
-
+            // moment localization
+            moment.locale('zh-CN')
             // post casts&genres then get imgs&lastVisit
-            let data = {
+            axios.post(`http://localhost:5000/api/av/${this.id}`, {
                 genres: this.genres,
                 cast: this.casts
-            }
-            fetch(`http://localhost:5000/api/av/${this.id}`, {
-                method: 'POST',
-                body: JSON.stringify(data), // data can be `string` or {object}!
-                headers: new Headers({
-                    'Content-Type': 'application/json'
-                })
-            }).then(response =>
-                response.json().then(data => ({
-                        data: data,
-                        status: response.status
-                    })
-                ).then(res => {
-                    console.log(res.status, res.data)
+            })
+                .then(res => {
+                    console.info(res)
                     this.imgs = res.data.imgs
                     this.lastVisit = res.data.lastVisit
-                }))
-                .catch(error => console.error(error))
-
+                    this.isDislike = res.data.isDislike
+                    this.isNeedHd = res.data.isNeedHd
+                })
+                .catch(err => console.error(err))
         }
     })
 
