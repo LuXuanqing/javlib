@@ -25,21 +25,25 @@ def check_av(id, genres=None, casts=None):
     :return: {imgs}
     """
     av = fetch_av(id)
-    last_visit = History.query.filter_by(av_id='av.id').order_by(History.timestamp.desc()).first()
-    logger.debug(last_visit)
+    last_visit = History.query.filter_by(av_id=id).order_by(History.timestamp.desc()).first()
+    # 记录这次访问
+    # TODO 用装饰器做成每次请求后自动添加访问记录
+    this_visit = History(av_id=id, site=request.referrer)
+    db.session.add(this_visit)
+    db.session.commit()
+    logger.info('Insert {}'.format(this_visit))
 
     # 如果本来没有genres, casts，则更新该字段
     data = request.get_json()
     is_changed = False
-    if av.genres is None and data.get('genres'):
-        av.genres = data['genres']
+    if av.genres_ is None and data.get('genres'):
+        av.genres_ = data['genres']
         is_changed = True
-    if av.casts is None and data.get('casts'):
-        av.casts = data['casts']
+    if av.casts_ is None and data.get('casts'):
+        av.casts_ = data['casts']
         is_changed = True
     # 如果更新了，则写入数据库
     if is_changed:
-        av.to_str()
         db.session.commit()
         logger.info('Updated info of {}'.format(av))
 
@@ -50,14 +54,6 @@ def check_av(id, genres=None, casts=None):
             'site': last_visit.site if last_visit else None
         }
     }
-    # 记录这次访问
-    # TODO 用装饰器做成每次请求后自动添加访问记录
-    logger.debug('referrer: {}'.format(request.referrer))
-    this_visit = History(av_id=av.id, site=request.referrer)
-    db.session.add(this_visit)
-    av.to_str()
-    db.session.commit()
-    logger.info('Insert {}'.format(this_visit))
 
     res = make_response(jsonify(result))
     res.headers['Access-Control-Allow-Origin'] = '*'
@@ -77,14 +73,13 @@ def fetch_av(id):
 
 def get_imgs_from_av(av):
     # 如果没有图片，从网上爬
-    if av.imgs is None:
+    if av.imgs_ is None:
         imgs = bots.get_previews(av.id)
         if imgs:
-            av.imgs = imgs
-            av.to_str()
+            av.imgs_ = imgs
             db.session.commit()
             logger.info('Updated imgs of {}'.format(av))
-    return av.to_json().imgs
+    return av.imgs_
 
 
 @app.route('/api/av/<id>/imgs', methods=['GET', 'POST'])

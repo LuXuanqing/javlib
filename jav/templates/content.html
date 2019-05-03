@@ -4,8 +4,7 @@
     <div id="history">
         <h2>上次访问</h2>
         <p v-if="lastVisit.timestamp"> {{ lastVisit.timestamp }} @
-            <a href="lastVisit.site">lastVisit.site</a>
-            <!--  TODO implement this hyperlink to site-->
+            <a :href="lastVisit.site">lastVisit.site</a>
         </p>
         <p v-else>这是你第一次访问</p>
     </div>
