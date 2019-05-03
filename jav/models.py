@@ -11,40 +11,40 @@ class Av(db.Model):
     is_dislike = db.Column(db.Boolean, default=False)
     is_need_hd = db.Column(db.Boolean, default=False)
 
-    @property
-    def genres_(self):
-        return json.loads(self.genres)
-
-
     def __repr__(self):
         return '<Av {}>'.format(self.id)
 
-    def to_json(self):
-        """把imgs, genres, casts从Str转换成Json"""
+    # TODO 监听commit等事件，用字段原名自动实现以下装饰器
+    @property
+    def genres_(self):
+        return json.loads(self.genres) if isinstance(self.genres, str) else None
 
-        # TODO 换一个更优雅的方法实现
-        if type(self.genres) == str:
-            self.genres = json.loads(self.genres)
-        if type(self.casts) == str:
-            self.casts = json.loads(self.casts)
-        if type(self.imgs) == str:
-            self.imgs = json.loads(self.imgs)
+    @genres_.setter
+    def genres_(self, value):
+        if not isinstance(value, list):
+            raise TypeError('new value must be a list of str')
+        self.genres = json.dumps(value)
 
-        return self
+    @property
+    def casts_(self):
+        return json.loads(self.casts) if isinstance(self.casts, str) else None
 
-    def to_str(self):
-        """把imgs, genres, casts从list对象转换成str用于写入数据库"""
+    @casts_.setter
+    def casts_(self, value):
+        if not isinstance(value, list):
+            raise TypeError('new value must be a list of str')
+        self.casts = json.dumps(value)
 
-        # TODO 换一个更优雅的方法实现
-        if type(self.genres) == list:
-            self.genres = json.dumps(self.genres)
-        if type(self.casts) == list:
-            self.casts = json.dumps(self.casts)
-        if type(self.imgs) == list:
-            self.imgs = json.dumps(self.imgs)
+    @property
+    def imgs_(self):
+        return json.loads(self.imgs) if isinstance(self.imgs, str) else None
 
-        return self
-    # TODO 监听commit等事件，自动实现这两个方法
+    @imgs_.setter
+    def imgs_(self, value):
+        if not isinstance(value, list):
+            raise TypeError('new value must be a list of str')
+        self.imgs = json.dumps(value)
+
 
 class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,4 +54,3 @@ class History(db.Model):
 
     def __repr__(self):
         return '<History {}@{}>'.format(self.av_id, self.timestamp)
-
