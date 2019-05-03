@@ -28,7 +28,9 @@ function initVue() {
             lastVisit: {},
             imgs: {},
             imgIdx: 0,
-            isShowImg: false
+            isShowImg: false,
+            isDislike: true,
+            isNeedHd: false
         },
         methods: {
             showThisImg: function (img) {
@@ -49,6 +51,9 @@ function initVue() {
             },
             getPreview: function () {
                 //TODO update this methods
+            },
+            disLike: function () {
+                //TODO implement this method
             }
         },
         created: function () {
