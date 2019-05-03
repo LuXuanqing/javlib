@@ -95,10 +95,18 @@ def handle_av_imgs(id):
         pass
 
 
-@app.route('/api/av/<id>/dislike')
+@app.route('/api/av/<id>/dislike', methods=['PUT', 'POST'])
 def av_dislike(id):
-    # TODO implement this fn
-    pass
+    """更新is dislike,body中isDislike需要为布尔值"""
+    is_dislike = request.get_json().get('isDislike')
+    if not isinstance(is_dislike, bool):
+        return jsonify(dict(success=False)), 400
+
+    av = fetch_av((id))
+    av.is_dislike = is_dislike
+    db.session.commit()
+    logger.info('Updated dislike of {}'.format(av))
+    return jsonify(dict(success=True))
 
 
 @app.route('/api/av/<id>/need-hd')
