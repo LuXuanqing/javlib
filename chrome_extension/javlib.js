@@ -28,7 +28,7 @@ function initVue() {
             lastVisit: {},
             imgs: {},
             imgIdx: 0,
-            isShowImg: false,
+            isShowImg: false
         },
         methods: {
             showThisImg: function (img) {
@@ -36,11 +36,13 @@ function initVue() {
                 this.imgIdx = this.imgs.indexOf(img)
             },
             nextImg: function () {
+                console.log('next')
                 if (this.imgIdx < this.imgs.length - 1) {
                     this.imgIdx += 1
                 }
             },
             previousImg: function () {
+                console.log('pre')
                 if (this.imgIdx > 0) {
                     this.imgIdx -= 1
                 }
@@ -96,7 +98,7 @@ function initVue() {
                     this.imgs = res.data.imgs
                     this.lastVisit = res.data.lastVisit
                 }))
-                .catch(error => console.log(error))
+                .catch(error => console.error(error))
 
         }
     })

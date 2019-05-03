@@ -11,6 +11,11 @@ class Av(db.Model):
     is_dislike = db.Column(db.Boolean, default=False)
     is_need_hd = db.Column(db.Boolean, default=False)
 
+    @property
+    def genres_(self):
+        return json.loads(self.genres)
+
+
     def __repr__(self):
         return '<Av {}>'.format(self.id)
 

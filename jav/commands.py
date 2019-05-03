@@ -6,7 +6,7 @@ from jav.models import Av, History
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db, Av=Av, History=History)
+    return dict(db=db, Av=Av, History=History, av=Av.query.first())
 
 
 @app.cli.command()
@@ -55,11 +55,20 @@ def forge():
              '"thumb": "https://pics.javcdn.pw/sample/6r4g_10.jpg", "title": "WANZ-801 オナニー出来ない僕を義姉がねっとり腰振り優しい騎乗位 '
              '篠田ゆう - 樣品圖像 - 10"}] '
     )
+    from datetime import datetime
     his1 = History(
         av_id='WANZ-801',
-        site='https://www.javbus.com/WANZ-801'
+        site='https://www.javbus.com/WANZ-801',
+        timestamp=datetime(2019, 5, 1, 10, 15, 24, 0)
+    )
+    his2 = History(
+        av_id='WANZ-801',
+        site='https://www.javbus.com/WANZ-801',
+        timestamp=datetime(2019, 5, 2, 23, 35, 44, 0)
     )
     db.session.add(av1)
     db.session.add(his1)
+    db.session.add(his2)
     db.session.commit()
+
     click.echo('Created av and history')

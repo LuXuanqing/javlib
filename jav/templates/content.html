@@ -3,31 +3,34 @@
     <hr class="grey">
     <div id="history">
         <h2>上次访问</h2>
-        <p>timestamp @
-            <span>site url</span>
+        <p v-if="lastVisit.timestamp"> {{ lastVisit.timestamp }} @
+            <a href="lastVisit.site">lastVisit.site</a>
             <!--  TODO implement this hyperlink to site-->
         </p>
+        <p v-else>这是你第一次访问</p>
     </div>
     <div id="operations">
         <button>不感兴趣</button>
         <button>需要HD资源</button>
+        <!--  TODO implement dislike-->
+        <!--  TODO implement need hd-->
+
     </div>
     <hr class="grey">
 
     <!-- preview images -->
     <div id="imgs">
         <h2>预览图</h2>
-        <div v-if="imgs" @keyup.right="nextImg" @keyup.left="previousImg">
+        <div v-if="imgs" v-on:keyup.right="nextImg" v-on:keyup.left="previousImg">
             <img v-for="img in imgs" @click="showThisImg(img)" :src="img.thumb" :title="img.title">
-            <div class="fullpicture" v-if="isShowImg">
+            <div v-if="isShowImg">
                 <button @click="previousImg" :disabled="imgIdx <= 0">上一张</button>
                 <img :src="imgs[imgIdx].full" @click="isShowImg = false">
                 <button @click="nextImg" :disabled="imgIdx >= this.imgs.length - 1">下一张</button>
             </div>
         </div>
         <div v-else>
-            <p>no preview</p>
-            <button @click="getPreview">fetch again from javbus</button>
+            <button @click="getPreview">尝试重新从javbus获取预览图</button>
         </div>
     </div>
     <hr class="grey">

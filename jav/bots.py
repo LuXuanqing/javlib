@@ -36,14 +36,14 @@ def get_previews(id):
     html = get_html(url)
     # 没有得到页面html内容就跳出
     if not html:
-        logger.warn('Can\'t get HTML from {}'.format(id))
+        logger.warning('Can\'t get HTML from {}'.format(id))
         return None
     soup = BeautifulSoup(html, 'html5lib')
     # 预览图的DOM结构：<a class="sample-box" href=full><div><img src=thumb></div></a>
     samples = soup.find_all(class_='sample-box')
     # 没有预览图就跳出
     if not samples:
-        logger.warn('{} has no preview imgs'.format(id))
+        logger.warning('{} has no preview imgs'.format(id))
         return None
     previews = []
     for sample in samples:

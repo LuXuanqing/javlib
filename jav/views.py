@@ -25,6 +25,8 @@ def check_av(id, genres=None, casts=None):
     :return: {imgs}
     """
     av = fetch_av(id)
+    last_visit = History.query.filter_by(av_id='av.id').order_by(History.timestamp.desc()).first()
+    logger.debug(last_visit)
 
     # 如果本来没有genres, casts，则更新该字段
     data = request.get_json()
@@ -41,15 +43,22 @@ def check_av(id, genres=None, casts=None):
         db.session.commit()
         logger.info('Updated info of {}'.format(av))
 
-    av.to_json()
     result = {
         'imgs': get_imgs_from_av(av),
         'lastVisit': {
-            'timestamp': None,
-            'site': None
+            'timestamp': last_visit.timestamp if last_visit else None,
+            'site': last_visit.site if last_visit else None
         }
     }
-    # TODO implement上次访问
+    # 记录这次访问
+    # TODO 用装饰器做成每次请求后自动添加访问记录
+    logger.debug('referrer: {}'.format(request.referrer))
+    this_visit = History(av_id=av.id, site=request.referrer)
+    db.session.add(this_visit)
+    av.to_str()
+    db.session.commit()
+    logger.info('Insert {}'.format(this_visit))
+
     res = make_response(jsonify(result))
     res.headers['Access-Control-Allow-Origin'] = '*'
     return res
@@ -62,7 +71,7 @@ def fetch_av(id):
         av = Av(id=id)
         db.session.add(av)
         db.session.commit()
-        logger.info('Inserted {} to db.'.format(av))
+        logger.info('Inserted {}.'.format(av))
     return av
 
 
