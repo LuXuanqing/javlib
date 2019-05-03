@@ -97,7 +97,7 @@ def handle_av_imgs(id):
 
 @app.route('/api/av/<id>/dislike', methods=['PUT', 'POST'])
 def av_dislike(id):
-    """更新is dislike,body中isDislike需要为布尔值"""
+    """更新is dislike,request body中isDislike需要为布尔值"""
     is_dislike = request.get_json().get('isDislike')
     if not isinstance(is_dislike, bool):
         return jsonify(dict(success=False)), 400
@@ -106,7 +106,9 @@ def av_dislike(id):
     av.is_dislike = is_dislike
     db.session.commit()
     logger.info('Updated dislike of {}'.format(av))
-    return jsonify(dict(success=True))
+    res = make_response(jsonify(dict(success=True)))
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    return res
 
 
 @app.route('/api/av/<id>/need-hd')
