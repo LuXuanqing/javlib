@@ -90,9 +90,13 @@ def handle_av_imgs(id):
         return jsonify(get_imgs_from_av(av))
 
     if request.method == 'POST':
-        # TODO 浏览javbus时自动post图片，省去再爬
+        # TODO 错误检验
+        # TODO 写入访问历史（最好可以通过fetch_av来创建）
         # 如果av没有imgs，并且post的data中有imgs，则写入数据库
-        pass
+        av.imgs_ = request.get_json()
+        db.session.commit()
+        logger.info('Updated imgs of {}'.format(av))
+        return 'ok'
 
 
 @app.route('/api/av/<id>/dislike', methods=['PUT'])
