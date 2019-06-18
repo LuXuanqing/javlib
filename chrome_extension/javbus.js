@@ -15,9 +15,12 @@ samples.forEach(sample => {
     }
     preview.push(p)
 })
+console.log(preview)
 // 成功获取id和preview才POST
+console.log(preview.length > 0)
+console.log(preview.length > 0 && id)
 if (preview.length > 0 && id) {
-    fetch(`http://localhost:5000/preview/${id}`, {
+    fetch(`http://localhost:5000/api/av/${id}/imgs`, {
             method: 'POST',
             body: JSON.stringify(preview),
             headers: new Headers({
