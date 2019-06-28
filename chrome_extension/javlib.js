@@ -8,15 +8,7 @@ target.parentElement.insertBefore(appContainer, target)
 
 
 // 把app的html插入到 #app-container
-// fetch(`http://localhost:5000/content`)
-//     .then(res => res.text())
-//     .then(text => {
-//         document.querySelector('#app-container').innerHTML = text
-//         console.info('Inserted HTML')
-//         initVue()
-//     })
-//     .catch(err => console.error(err))
-axios(`http://localhost:5000/content`)
+axios(`http://localhost:5000/content/javlib`)
     .then(res => {
         document.querySelector('#app-container').innerHTML = res.data
         console.info('Inserted HTML')
@@ -33,7 +25,7 @@ function init() {
             genres: [],
             casts: [],
             lastVisit: {},
-            imgs: {},
+            imgs: [],
             imgIdx: 0,
             isShowImg: false,
             isDislike: false,
@@ -119,7 +111,7 @@ function init() {
             // moment localization
             moment.locale('zh-CN')
             // post casts&genres then get imgs&lastVisit
-            axios.post(`http://localhost:5000/api/av/${this.id}`, {
+            axios.post(`http://localhost:5000/api/javlib/${this.id}`, {
                 genres: this.genres,
                 cast: this.casts
             })

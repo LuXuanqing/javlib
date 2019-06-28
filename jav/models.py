@@ -4,6 +4,10 @@ import json
 
 
 class Av(db.Model):
+    '''
+    genres是字符串，genres_是把字符串转成了list
+    其它带_的字段类似
+    '''
     id = db.Column(db.String(16), primary_key=True, index=True)
     genres = db.Column(db.String)
     casts = db.Column(db.String)
@@ -53,4 +57,4 @@ class History(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return '<History {}@{}>'.format(self.av_id, self.timestamp)
+        return '<History {}@{}@{}>'.format(self.av_id, self.site, self.timestamp)

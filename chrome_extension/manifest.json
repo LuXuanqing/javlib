@@ -1,15 +1,15 @@
 {
     "manifest_version": 2,
     "name": "previews for javlib",
-    "version": "0.3.0",
+    "version": "0.3.6",
     "description": "显示影片预览图",
     "content_scripts": [{
             "matches": ["http://www.javlibrary.com/cn/?v=*"],
-            "js": ["vue.js", "axios.min.js", "moment-with-locales.min.js","javlib.js"]
+            "js": ["vue.js", "axios.min.js", "moment-with-locales.min.js", "javlib.js"]
         },
         {
             "matches": ["https://www.javbus.com/*-*"],
-            "js": ["javbus.js"]
+            "js": ["vue.js", "axios.min.js", "moment-with-locales.min.js", "javbus.js"]
         }
     ]
 }
