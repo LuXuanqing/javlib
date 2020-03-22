@@ -7,4 +7,5 @@
 *.log
 .idea/
 old/
-.vscode/launch.json
+.vscode
+*.csv

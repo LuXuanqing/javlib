@@ -41,7 +41,7 @@ function init() {
         },
         methods: {
             disLike: function () {
-                axios.put(`http://localhost:5000/api/av/WANZ-801/dislike`, {
+                axios.put(`http://localhost:5000/api/av/${this.id}/dislike`, {
                     isDislike: !this.isDislike
                 })
                     .then(res => {
@@ -50,7 +50,7 @@ function init() {
                     .catch(err => console.error(err))
             },
             needHd: function () {
-                axios.put(`http://localhost:5000/api/av/WANZ-801/needhd`, {
+                axios.put(`http://localhost:5000/api/av/${this.id}/needhd`, {
                     isNeedHd: !this.isNeedHd
                 })
                     .then(res => {

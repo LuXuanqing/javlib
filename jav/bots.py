@@ -6,8 +6,8 @@ logger = create_logger(__name__)
 
 domain_url = 'https://www.javbus.com/'
 proxy = {
-    'http': 'http://127.0.0.1:1080',
-    'https': 'http://127.0.0.1:1080',
+    'http': 'http://127.0.0.1:7890',
+    'https': 'http://127.0.0.1:7890',
 }
 headers = {
     'accept':

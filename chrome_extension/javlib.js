@@ -63,10 +63,15 @@ function init() {
                 }
             },
             getPreview: function () {
-                //TODO update this methods
+                axios.get(`http://localhost:5000/api/av/${this.id}/imgs`)
+                    .then(res => {
+                        console.log(res)
+                        this.imgs = res.data.imgs
+                    })
+                    .catch(err => console.error(err))
             },
             disLike: function () {
-                axios.put(`http://localhost:5000/api/av/WANZ-801/dislike`, {
+                axios.put(`http://localhost:5000/api/av/${this.id}/dislike`, {
                     isDislike: !this.isDislike
                 })
                     .then(res => {
@@ -75,14 +80,14 @@ function init() {
                     .catch(err => console.error(err))
             },
             needHd: function () {
-                axios.put(`http://localhost:5000/api/av/WANZ-801/needhd`, {
+                axios.put(`http://localhost:5000/api/av/${this.id}/needhd`, {
                     isNeedHd: !this.isNeedHd
                 })
                     .then(res => {
                         this.isNeedHd = !this.isNeedHd
                     })
                     .catch(err => console.error(err))
-            }
+            },
         },
         created: function () {
             //get ID
@@ -104,6 +109,7 @@ function init() {
                 })
                 return list
             }
+
             this.casts = getList('#video_cast span.cast')
             console.info(`Got casts: ${this.casts}`)
             this.genres = getList('#video_genres span.genre')
@@ -125,5 +131,4 @@ function init() {
                 .catch(err => console.error(err))
         }
     })
-
 }
