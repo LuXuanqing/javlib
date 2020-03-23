@@ -6,8 +6,8 @@ logger = create_logger(__name__)
 
 domain_url = 'https://www.javbus.com/'
 proxy = {
-    'http': 'http://127.0.0.1:7890',
-    'https': 'http://127.0.0.1:7890',
+    'http': 'http://raspberrypi:7890',
+    'https': 'http://raspberrypi:7890',
 }
 headers = {
     'accept':
@@ -27,7 +27,7 @@ def get_html(url):
     try:
         r = requests.get(url, timeout=10, proxies=proxy)
         return r.text
-    except Exception as err:
+    except Exception:
         return ''
 
 

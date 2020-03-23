@@ -1,6 +1,4 @@
-*/__pycache__/
-*.t.*
-*_t.*
+__pycache__
 *.db
 *.sketch
 *.pyc
@@ -9,3 +7,4 @@
 old/
 .vscode
 *.csv
+.venv
