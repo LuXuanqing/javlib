@@ -8,3 +8,4 @@ old/
 .vscode
 *.csv
 .venv
+*.bak
