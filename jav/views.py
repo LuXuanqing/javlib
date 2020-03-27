@@ -8,14 +8,6 @@ logger = create_logger(__name__)
 
 
 # utils
-def handle_response(res):
-    """
-    为response加上允许跨域
-    """
-    res.headers['Access-Control-Allow-Origin'] = '*'
-    return res
-
-
 def fetch_av(id):
     # 从数据库查询，没有则新建
     av = Av.query.get(id)
@@ -44,11 +36,12 @@ def access_log(id, referer=None):
     :param id:
     :return: 上次访问信息<History>
     """
+    logger.debug(request.headers)
     last_visit = History.query.filter_by(av_id=id).order_by(History.timestamp.desc()).first()
     # 记录这次访问
     # TODO 写入访问历史（最好可以通过fetch_av来创建）
     # TODO 用装饰器做成每次请求后自动添加访问记录
-    this_visit = History(av_id=id, site=request.referrer or referer)
+    this_visit = History(av_id=id, site=request.headers['From-Url'])
     db.session.add(this_visit)
     db.session.commit()
     logger.info('Insert AccessLog {}'.format(this_visit))
@@ -76,17 +69,6 @@ def update_info(av, data):
 
 
 # views
-@app.route('/content/<name>')
-def content(name):
-    if name == 'javlib':
-        res = make_response(send_file('templates/javlib.html'))
-    elif name == 'javbus':
-        res = make_response(send_file('templates/javbus.html'))
-    else:
-        return 'invalid content name', 404
-    return handle_response(res)
-
-
 # javbus: post imgs
 # all: put dislike, needhd; last visit
 
@@ -105,7 +87,7 @@ def javlib(id):
     data = request.get_json()
     update_info(av, data)
 
-    res = make_response(jsonify({
+    return make_response(jsonify({
         'imgs': get_imgs_from_av(av),
         'lastVisit': {
             'timestamp': last_visit.timestamp if last_visit else None,
@@ -114,7 +96,6 @@ def javlib(id):
         'isDislike': av.is_dislike,
         'isNeedHd': av.is_need_hd
     }))
-    return handle_response(res)
 
 
 @app.route('/api/javbus/<id>', methods=['POST'])
@@ -129,7 +110,7 @@ def javbus(id):
         av.imgs_ = imgs
         db.session.commit()
         logger.info('Updated imgs of {}'.format(av))
-    res = make_response(jsonify({
+    return make_response(jsonify({
         'lastVisit': {
             'timestamp': last_visit.timestamp if last_visit else None,
             'site': last_visit.site if last_visit else None
@@ -137,7 +118,6 @@ def javbus(id):
         'isDislike': av.is_dislike,
         'isNeedHd': av.is_need_hd
     }))
-    return handle_response(res)
 
 
 @app.route('/api/av/<id>/imgs')
@@ -158,8 +138,7 @@ def av_dislike(id):
     av.is_dislike = is_dislike
     db.session.commit()
     logger.info('Updated dislike of {}'.format(av))
-    res = make_response(jsonify(dict(success=True)))
-    return handle_response(res)
+    return make_response(jsonify(dict(success=True)))
 
 
 @app.route('/api/av/<id>/needhd', methods=['PUT'])
@@ -173,26 +152,4 @@ def av_need_hd(id):
     av.is_need_hd = is_need_hd
     db.session.commit()
     logger.info('Updated need_hd of {}'.format(av))
-    res = make_response(jsonify(dict(success=True)))
-    return handle_response(res)
-
-# 下面是我自己的玩具
-# @app.route('/greet/<abbr>')
-# def greet(abbr):
-#     return get_person_info()
-#
-#
-# @app.route('/person')
-# def get_person_info():
-#     abbr = request.args.get('abbr')
-#     d = {
-#         'lxq': {
-#             'name': 'luxuanqing',
-#             'age': 24
-#         },
-#         'zhh': {
-#             'name': "zhanghuihui",
-#             'age': 25
-#         }
-#     }
-#     return jsonify(d[abbr])
+    return make_response(jsonify(dict(success=True)))
