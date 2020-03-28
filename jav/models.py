@@ -57,4 +57,4 @@ class History(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return '<History {}@{}@{}>'.format(self.av_id, self.site, self.timestamp)
+        return '<History {} @ {} @ {}>'.format(self.av_id, self.site, self.timestamp)
