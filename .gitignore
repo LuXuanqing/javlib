@@ -4,8 +4,9 @@ __pycache__
 *.pyc
 *.log
 .idea/
-old/
 .vscode
 *.csv
 .venv
-*.bak
+htmlcov/
+.coverage
+.coveragerc
